@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+sqlNo：查询序列号
+sqlTitle：列表显示名称
+sqlTemp：列表显示jsp模板
+extendWidth：扩展功能栏宽度<extendWidth>110px</extendWidth>
+sqlDetial：查询正文sql
+extendList：扩展功能
+extendType：0.详情查询SQL，用于双击查看详情 1.每行显示 （需要替换字段）2.表头显示
+fieldInfoList：字段属性
+fieldType：字段类型:String,Date,Long,Money
+queryType：查询类型
+0.表示不提供查询；
+1.精确查询 (value=某值)
+2.模糊查询(value like %某值%) 
+3.数字范围查询(5<=value<=10) 
+4.时间日期查询(value=2012-10-11)  
+5.时间范围查询 (如：2012-10-31<=value<=2012-12-25) 
+6.下拉列表查询
+where
+ 	ui.u_id=##uId##
+and
+	ui.title=##title##
+ -->
+<queryInfo>
+    <sqlNo>launchConsultList</sqlNo>
+    <sqlTitle>主动发起的会诊列表</sqlTitle>
+    <sqlTemp></sqlTemp>
+    <extendWidth></extendWidth>
+    <sqlDetial><![CDATA[
+    SELECT
+        c.bill_num,
+        (
+            SELECT
+                title
+            FROM
+                user_info
+            WHERE
+                u_id = c.u_id
+        ) AS user_name,
+        c.gmt_begin,
+        c.gmt_end,
+        c.rec_id
+    FROM
+        consult_total c
+    WHERE
+        c.u_id = ##uId##
+    ORDER BY
+        c.rec_id DESC
+	]]></sqlDetial>
+    <fieldList>
+        <fieldInfo>
+            <fieldName>bill_num</fieldName>
+            <showName>会诊账单号</showName>
+            <showIndex>1</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>1</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>user_name</fieldName>
+            <showName>会诊发起人</showName>
+            <showIndex>2</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>gmt_begin</fieldName>
+            <showName>会诊开始时间</showName>
+            <showIndex>3</showIndex>
+            <fieldType>Date</fieldType>
+            <queryType>4</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>gmt_end</fieldName>
+            <showName>会诊结束时间</showName>
+            <showIndex>4</showIndex>
+            <fieldType>Date</fieldType>
+            <queryType>4</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>rec_id</fieldName>
+            <showName>主键ID</showName>
+            <showIndex>0</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+    </fieldList>
+</queryInfo>

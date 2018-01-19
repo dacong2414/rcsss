@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+sqlNo：查询序列号
+sqlTitle：列表显示名称
+sqlTemp：列表显示jsp模板
+extendWidth：扩展功能栏宽度<extendWidth>110px</extendWidth>
+sqlDetial：查询正文sql
+extendList：扩展功能
+extendType：0.详情查询SQL，用于双击查看详情 1.每行显示 （需要替换字段）2.表头显示
+fieldInfoList：字段属性
+fieldType：字段类型:String,Date,Long,Money
+queryType：查询类型
+0.表示不提供查询；
+1.精确查询 (value=某值)
+2.模糊查询(value like %某值%) 
+3.数字范围查询(5<=value<=10) 
+4.时间日期查询(value=2012-10-11)  
+5.时间范围查询 (如：2012-10-31<=value<=2012-12-25) 
+6.下拉列表查询
+where
+ 	ui.u_id=##uId##
+and
+	ui.title=##title##
+ -->
+<queryInfo>
+    <sqlNo>macAddressList</sqlNo>
+    <sqlTitle>客户端版本查询</sqlTitle>
+    <sqlTemp></sqlTemp>
+    <extendWidth></extendWidth>
+    <sqlDetial><![CDATA[
+SELECT
+	l.rec_id,
+	l.user_name,
+	l.mac_address,
+	l.zip_name,
+	l.gmt_create,
+	l.gmt_mod
+	FROM
+		mac_address l
+	]]></sqlDetial>
+    <fieldList>
+        <fieldInfo>
+            <fieldName>rec_id</fieldName>
+            <showName>记录ID</showName>
+            <showIndex>0</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>user_name</fieldName>
+            <showName>姓名</showName>
+            <showIndex>5</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>mac_address</fieldName>
+            <showName>MAC地址</showName>
+            <showIndex>10</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>1</queryType>
+            <csId>0</csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>zip_name</fieldName>
+            <showName>压缩文件名</showName>
+            <showIndex>15</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>gmt_create</fieldName>
+            <showName>创建时间</showName>
+            <showIndex>20</showIndex>
+            <fieldType>Date</fieldType>
+            <queryType>5</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>gmt_mod</fieldName>
+            <showName>修改时间</showName>
+            <showIndex>25</showIndex>
+            <fieldType>Date</fieldType>
+            <queryType>5</queryType>
+            <csId></csId>
+        </fieldInfo>
+    </fieldList>
+</queryInfo>

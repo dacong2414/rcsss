@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+sqlNo：查询序列号
+sqlTitle：列表显示名称
+sqlTemp：列表显示jsp模板
+extendWidth：扩展功能栏宽度<extendWidth>110px</extendWidth>
+sqlDetial：查询正文sql
+extendList：扩展功能
+extendType：0.详情查询SQL，用于双击查看详情 1.每行显示 （需要替换字段）2.表头显示
+fieldInfoList：字段属性
+fieldType：字段类型:String,Date,Long,Money
+queryType：查询类型
+0.表示不提供查询；
+1.精确查询 (value=某值)
+2.模糊查询(value like %某值%) 
+3.数字范围查询(5<=value<=10) 
+4.时间日期查询(value=2012-10-11)  
+5.时间范围查询 (如：2012-10-31<=value<=2012-12-25) 
+6.下拉列表查询
+where
+ 	ui.u_id=##uId##
+and
+	ui.title=##title##
+ -->
+<queryInfo>
+    <sqlNo>roleManageList</sqlNo>
+    <sqlTitle>角色管理列表</sqlTitle>
+    <sqlTemp></sqlTemp>
+    <extendWidth></extendWidth>
+    <sqlDetial><![CDATA[
+    SELECT
+        r.role_id,
+        r.role_name,
+        r.role_desc,
+        r.use_flag,
+        (
+            SELECT
+                GROUP_CONCAT(u.title)
+            FROM
+                user_info u,
+                sys_users_roles ur
+            WHERE
+                u.u_id = ur.user_id
+            AND ur.role_id = r.role_id
+        ) AS user_name,
+        (
+            SELECT
+                GROUP_CONCAT(CAST(u.u_id AS CHAR))
+            FROM
+                user_info u,
+                sys_users_roles ur
+            WHERE
+                u.u_id = ur.user_id
+            AND ur.role_id = r.role_id
+        ) AS user_id
+    FROM
+        sys_roles r
+	]]></sqlDetial>
+    <fieldList>
+        <fieldInfo>
+            <fieldName>role_id</fieldName>
+            <showName>角色ID</showName>
+            <showIndex>1</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>1</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>role_name</fieldName>
+            <showName>角色名称</showName>
+            <showIndex>2</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>role_desc</fieldName>
+            <showName>角色描述</showName>
+            <showIndex>3</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>use_flag</fieldName>
+            <showName>角色状态</showName>
+            <showIndex>4</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>6</queryType>
+            <csId>4</csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>user_name</fieldName>
+            <showName>用户姓名</showName>
+            <showIndex>0</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>user_id</fieldName>
+            <showName>用户ID</showName>
+            <showIndex>0</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+    </fieldList>
+</queryInfo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+sqlNo：查询序列号
+sqlTitle：列表显示名称
+sqlTemp：列表显示jsp模板
+extendWidth：扩展功能栏宽度<extendWidth>110px</extendWidth>
+sqlDetial：查询正文sql
+extendList：扩展功能
+extendType：0.详情查询SQL，用于双击查看详情 1.每行显示 （需要替换字段）2.表头显示
+fieldInfoList：字段属性
+fieldType：字段类型:String,Date,Long,Money
+queryType：查询类型
+0.表示不提供查询；
+1.精确查询 (value=某值)
+2.模糊查询(value like %某值%) 
+3.数字范围查询(5<=value<=10) 
+4.时间日期查询(value=2012-10-11)  
+5.时间范围查询 (如：2012-10-31<=value<=2012-12-25) 
+6.下拉列表查询
+where
+ 	ui.u_id=##uId##
+and
+	ui.title=##title##
+ -->
+<queryInfo>
+    <sqlNo>propertyInfoList</sqlNo>
+    <sqlTitle>属性列表</sqlTitle>
+    <sqlTemp></sqlTemp>
+    <extendWidth></extendWidth>
+    <sqlDetial><![CDATA[
+   SELECT
+	property_id,
+	property_name_en,
+	property_name_cn,
+	property_desc,
+	default_value,
+	html_type,
+	global_flag,
+  customize_flag
+FROM
+	property_info
+WHERE
+ disable_flag=1 
+ ORDER BY display_order DESC
+	]]></sqlDetial>
+    <fieldList>
+        <fieldInfo>
+            <fieldName>property_id</fieldName>
+            <showName>属性ID</showName>
+            <showIndex>5</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>property_name_en</fieldName>
+            <showName>属性英文名称</showName>
+            <showIndex>10</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>property_name_cn</fieldName>
+            <showName>属性中文名称</showName>
+            <showIndex>15</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>property_desc</fieldName>
+            <showName>属性描述</showName>
+            <showIndex>0</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>default_value</fieldName>
+            <showName>默认值</showName>
+            <showIndex>25</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>0</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>html_type</fieldName>
+            <showName>属性展示类型</showName>
+            <showIndex>0</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>6</queryType>
+            <csId>5</csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>global_flag</fieldName>
+            <showName>是否公共属性配置</showName>
+            <showIndex>35</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>6</queryType>
+            <csId>6</csId>
+        </fieldInfo>
+        <fieldInfo>
+            <fieldName>customize_flag</fieldName>
+            <showName>能否用户自定义</showName>
+            <showIndex>40</showIndex>
+            <fieldType>Long</fieldType>
+            <queryType>6</queryType>
+            <csId>7</csId>
+        </fieldInfo>
+    </fieldList>
+</queryInfo>
