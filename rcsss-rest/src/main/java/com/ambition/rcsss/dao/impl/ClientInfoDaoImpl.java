@@ -78,7 +78,7 @@ public class ClientInfoDaoImpl extends MysqlDaoSupport implements ClientInfoDao 
      * @see com.ambition.rcsss.dao.ClientInfoDao#getClientInfoByMacAddressAndFieldId(java.lang.String, java.lang.Long)
      */
     @Override
-    public ClientInfo getClientInfoByMacAddressAndFieldId(String macAddress) {
+    public ClientInfo getClientInfoByMacAddress(String macAddress) {
         String[] keys = { "macAddress" };
         Object[] values = { macAddress };
         return criteriaExecuteUniqueResult(ClientInfo.class, keys, values);

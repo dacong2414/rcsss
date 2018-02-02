@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ambition.rcsss.model.common.ResultInfo;
 import com.ambition.rcsss.model.entity.GroupCustomRelational;
-import com.ambition.rcsss.model.pojo.sendmessage2c.CustomRelationalVo;
 import com.ambition.rcsss.service.GroupInfoService;
 
 /**
@@ -78,13 +76,18 @@ public class GroupCustomRelationalController {
 
     }
 
-    @RequestMapping(value = "/method=getCustomRelationalUids", method = { RequestMethod.POST })
-    @ApiOperation(value = "如果自定义配置了 传uId过来查出能够看到的人或组里的人")
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "uId", value = "自定义左边对应id", required = false, paramType = "query", dataType = "int"),
-            @ApiImplicitParam(name = "flag", value = "全局配置的标志（例如：allPersonSee）", required = false, paramType = "query", dataType = "string") })
-    public ResultInfo<Map<String, Object>> getGroupCustomRelationals(@RequestBody CustomRelationalVo customRelationalVo) {
-        return groupInfoService.getCustomRelationalUids(customRelationalVo);
+    @RequestMapping(value = "/method=setFlag", method = { RequestMethod.POST })
+    @ApiOperation(value = "存flag 在flag/flag.xml里面")
+    @ApiImplicitParams(value = { @ApiImplicitParam(name = "flag", value = "全局配置的标志（例如：allPersonSee，allPersonNoSee，sameGroupRecursion，sameGroupNoRecursion，）", required = false, paramType = "query", dataType = "string") })
+    public ResultInfo<String> setFlag(String flag) {
+        groupInfoService.setFlag(flag);
+        return ResultInfo.createSuccessResult("flag已经存入");
+    }
 
+    @RequestMapping(value = "/method=getFlag", method = { RequestMethod.POST })
+    @ApiOperation(value = "取flag")
+    public ResultInfo<String> getFlag() {
+        String flag = groupInfoService.getFlag();
+        return ResultInfo.createSuccessResult(flag);
     }
 }

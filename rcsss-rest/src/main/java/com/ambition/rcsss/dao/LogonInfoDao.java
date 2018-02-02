@@ -1,7 +1,9 @@
 package com.ambition.rcsss.dao;
 
 import com.ambition.rcsss.model.entity.AccessKeyInfo;
+import com.ambition.rcsss.model.entity.EquipmentInfo;
 import com.ambition.rcsss.model.entity.LogonInfo;
+import com.ambition.rcsss.model.entity.MacAddressLoginName;
 
 /**
  * 登录dao
@@ -36,4 +38,18 @@ public interface LogonInfoDao {
      * @return
      */
     LogonInfo getLoginInfoByName(String loginName);
+
+    /**
+     * 获取设备名称
+     * @param macAddress
+     * @return
+     */
+    EquipmentInfo getEquipmentInfoByMacAdress(String macAddress);
+
+    /**
+     * 登录名和 macAdress映射关系
+     * @param loginName
+     * @return
+     */
+    MacAddressLoginName getMacAddressLoginName(String loginName);
 }

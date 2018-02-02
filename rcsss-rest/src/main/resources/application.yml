@@ -8,3 +8,5 @@ spring:
       - dev
   application:
     name: rcsss
+  project:
+    version: @project.version@  

@@ -398,6 +398,15 @@ public enum CodeEnum {
      * 传入数据错误（patientId、reportId、videoId、videoLength）没有传！！
      */
     ERROR_5055(5055L, "传入数据错误（patientId、reportId、videoId、videoLength）没有传！！"),
+    /**
+     * 自定义分组没有配置 例如：allPersonSee，allPersonNoSee，sameGroupRecursion，sameGroupNoRecursion
+     */
+    ERROR_5056(5056L,
+               "自定义分组没有配置 例如：allPersonSee，allPersonNoSee，sameGroupRecursion，sameGroupNoRecursion"),
+    /**
+     * 传入的MAC地址为空
+     */
+    ERROR_5057(5057L, "传入的MAC地址为空"),
 
     /**
     * 列表查询数据不存在

@@ -40,7 +40,6 @@ import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteLDVo;
 import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteLVVo;
 import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteMACGHCVo;
 import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteMERVo;
-import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteMONITORSVo;
 import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteQLVVo;
 import com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteSQRVo;
 import com.ambition.rcsss.model.pojo.sendmessage2c.consult.HeartBeatVo;
@@ -76,7 +75,7 @@ public class SendMessage2CController {
     @CheckSignControl(description = "head验证")
     @UseTable(tables = { "user_info", "sys_resources" })
     public ResultInfo<Map<String, Object>> login(@RequestBody ExecuteLDVo executeLDVo) {
-        return sendMessage2CService.login(executeLDVo);
+        return sendMessage2CService.exeLogin(executeLDVo);
 
     }
 
@@ -117,7 +116,8 @@ public class SendMessage2CController {
      */
     @RequestMapping(value = "/getUserInfoList", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "获取所有用户(除去admin这一条数据)->服务端调用")
-    //@CheckSignControl(description = "head验证")
+    @CheckSignControl(description = "head验证")
+    @UseTable(tables = { "user_info" })
     public ResultInfo<Map<String, Object>> getUserInfoList() {
         return sendMessage2CService.getUserInfoList();
 
@@ -341,7 +341,7 @@ public class SendMessage2CController {
      */
     @RequestMapping(value = "/getClientConfigByMAC", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "通过mac地址获取 hClientConfigAndShowConfig和commonConfig   ->客户端调用")
-    @CheckSignControl(description = "head验证")
+    // @CheckSignControl(description = "head验证")
     @UseTable(tables = { "property_info", "client_property" })
     public ResultInfo<Map<String, Object>> getHClientConfigAndShowConfigAndCommonConfigByMAC(@RequestBody ExecuteMACGHCVo executeMACGHCVo) {
         return sendMessage2CService
@@ -355,12 +355,27 @@ public class SendMessage2CController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/getMonitorsAndclients", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "获取监控关系->服务端调用")
+    /*    @RequestMapping(value = "/getMonitorsAndclients", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+        @ApiOperation(value = "获取监控关系->服务端调用")
+        @CheckSignControl(description = "head验证")
+        @UseTable(tables = { "monitor_client_mapping" })
+        public ResultInfo<Map<String, Object>> getMonitorsAndclients(@RequestBody ExecuteMONITORSVo executeMONITORSVo) {
+            return sendMessage2CService.getMonitorsAndclients(executeMONITORSVo);
+
+        }
+    */
+    /**
+     * 获取所有的监控关系
+     *
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/getMonitorRelationList", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "获取所有的监控关系->服务端调用")
     @CheckSignControl(description = "head验证")
     @UseTable(tables = { "monitor_client_mapping" })
-    public ResultInfo<Map<String, Object>> getMonitorsAndclients(@RequestBody ExecuteMONITORSVo executeMONITORSVo) {
-        return sendMessage2CService.getMonitorsAndclients(executeMONITORSVo);
+    public ResultInfo<Map<String, Object>> getMonitorRelationList() {
+        return sendMessage2CService.getMonitorRelationList();
 
     }
 
@@ -389,8 +404,8 @@ public class SendMessage2CController {
     @ApiOperation(value = "获取web配置的所有会议->服务端调用")
     @CheckSignControl(description = "head验证")
     @UseTable(tables = { "meeting_info" })
-    public ResultInfo<Map<String, Object>> getMeetingInfos(@RequestBody ExecuteGDCVo executeVo) {
-        return sendMessage2CService.getMeetingInfos(executeVo);
+    public ResultInfo<Map<String, Object>> getMeetingInfos() {
+        return sendMessage2CService.getMeetingInfos();
 
     }
 
@@ -418,9 +433,9 @@ public class SendMessage2CController {
     @RequestMapping(value = "/getCustomRelationalUids", method = { RequestMethod.POST })
     @ApiOperation(value = "如果自定义配置了 传uId过来查出能够看到的人或组里的人->uId 自定义左边对应id  flag 全局配置的标志（例如：allPersonSee）->服务端调用")
     @CheckSignControl(description = "head验证")
+    @UseTable(tables = { "group_custom_relational", "user_info" })
     public ResultInfo<Map<String, Object>> getCustomRelationalUids(@RequestBody CustomRelationalVo customRelationalVo) {
         return groupInfoService.getCustomRelationalUids(customRelationalVo);
-
     }
 
     @PostMapping(value = "/getHeartBeat")

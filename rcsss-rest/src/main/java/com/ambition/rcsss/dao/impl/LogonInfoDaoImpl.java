@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 import com.ambition.rcsss.dao.LogonInfoDao;
 import com.ambition.rcsss.dao.MysqlDaoSupport;
 import com.ambition.rcsss.model.entity.AccessKeyInfo;
+import com.ambition.rcsss.model.entity.EquipmentInfo;
 import com.ambition.rcsss.model.entity.LogonInfo;
+import com.ambition.rcsss.model.entity.MacAddressLoginName;
 
 /**
  * 
@@ -54,6 +56,30 @@ public class LogonInfoDaoImpl extends MysqlDaoSupport implements LogonInfoDao {
         String[] keys = { "loginName" };
         Object[] values = { loginName };
         return criteriaExecuteUniqueResult(LogonInfo.class, keys, values);
+    }
+
+    /** 
+     * @param macAddress
+     * @return
+     * @see com.ambition.rcsss.dao.LogonInfoDao#getEquipmentInfoByMacAdress(java.lang.String)
+     */
+    @Override
+    public EquipmentInfo getEquipmentInfoByMacAdress(String equipmentId) {
+        String[] keys = { "equipmentId" };
+        Object[] values = { equipmentId };
+        return criteriaExecuteUniqueResult(EquipmentInfo.class, keys, values);
+    }
+
+    /** 
+     * @param loginName
+     * @return
+     * @see com.ambition.rcsss.dao.LogonInfoDao#getMacAddressLoginName(java.lang.String)
+     */
+    @Override
+    public MacAddressLoginName getMacAddressLoginName(String loginName) {
+        String[] keys = { "loginName" };
+        Object[] values = { loginName };
+        return criteriaExecuteUniqueResult(MacAddressLoginName.class, keys, values);
     }
 
 }

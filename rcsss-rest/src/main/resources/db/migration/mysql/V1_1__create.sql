@@ -420,4 +420,30 @@ CREATE TABLE `http_send_failed_resend` (
   PRIMARY KEY (`rec_id`)
 ) ENGINE =InnoDB DEFAULT CHARSET=gbk;
 
+DROP TABLE IF EXISTS `mac_address_login_name`;
+CREATE TABLE `mac_address_login_name` (
+  `rec_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `login_name` varchar(255) NOT NULL COMMENT '登录名',
+  `mac_address` varchar(255) NOT NULL COMMENT 'mac地址',
+  PRIMARY KEY (`rec_id`)
+) ENGINE =InnoDB DEFAULT CHARSET=gbk;
+
+DROP TABLE IF EXISTS `mac_address_login_name`;
+CREATE TABLE `mac_address_login_name` (
+  `rec_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `login_name` varchar(255) NOT NULL COMMENT '登录名',
+  `mac_address` varchar(255) NOT NULL COMMENT 'mac地址',
+  PRIMARY KEY (`rec_id`)
+) ENGINE =InnoDB DEFAULT CHARSET=gbk;
+
+DROP TABLE IF EXISTS `equipment_info`;
+CREATE TABLE `equipment_info` (
+  `rec_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `equipment_sys_name` varchar(255) NOT NULL COMMENT '设备系统名称  pc ios android',
+  `equipment_id` varchar(255) NOT NULL COMMENT 'mac地址(或唯一码)',
+  `equipment_name` varchar(255) NOT NULL COMMENT '设备名称 华为 iphone',
+  `version_info` varchar(255) NOT NULL COMMENT '客户端版本信息  ',
+  PRIMARY KEY (`rec_id`)
+) ENGINE =InnoDB DEFAULT CHARSET=gbk;
+
 

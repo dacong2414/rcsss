@@ -147,7 +147,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/index.html", "/doc.html", "/swagger-ui.html", "/webjars/**",
             "/swagger-resources/**", "/v2/**", "/api", "/db", "/favicon.ico", "/resources/**",
-            "/druid/**");
+            "/druid/**", "/message/*");
     }
 
     /**

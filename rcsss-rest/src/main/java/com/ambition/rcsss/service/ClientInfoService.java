@@ -47,4 +47,11 @@ public interface ClientInfoService {
      */
     public ClientInfo getClientInfo(Long clientId);
 
+    /**
+     * 获取客户端信息用于回显
+     * @param macAddress
+     * @return
+     */
+    public ClientInfo getClientInfo2C(String macAddress);
+
 }

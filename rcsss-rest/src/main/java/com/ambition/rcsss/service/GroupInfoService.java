@@ -91,4 +91,17 @@ public interface GroupInfoService {
      */
     public ResultInfo<Map<String, Object>> getCustomRelationalUids(CustomRelationalVo customRelationalVo);
 
+    /**
+     * 存flag 在flag/flag.xml里面
+     * @param String
+     * @return
+     */
+    public void setFlag(String flag);
+
+    /**
+     * 获取flag 前端回显
+     * @return
+     */
+    public String getFlag();
+
 }

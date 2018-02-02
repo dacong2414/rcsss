@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ambition.rcsss.dao.BaseConfigDao;
 import com.ambition.rcsss.dao.LogonInfoDao;
 import com.ambition.rcsss.dao.MysqlDaoSupport;
 import com.ambition.rcsss.dao.PropertyInfoDao;
@@ -14,8 +15,11 @@ import com.ambition.rcsss.dao.SysRolesDao;
 import com.ambition.rcsss.dao.UserGroupDao;
 import com.ambition.rcsss.dao.UserInfoDao;
 import com.ambition.rcsss.model.common.IGlobalConstant;
+import com.ambition.rcsss.model.entity.GroupCustomRelational;
 import com.ambition.rcsss.model.entity.LogonInfo;
+import com.ambition.rcsss.model.entity.MonitorClientMapping;
 import com.ambition.rcsss.model.entity.PropertyInfo;
+import com.ambition.rcsss.model.entity.SysRoles;
 import com.ambition.rcsss.model.entity.SysUsersRoles;
 import com.ambition.rcsss.model.entity.UserDefined;
 import com.ambition.rcsss.model.entity.UserGroup;
@@ -46,6 +50,8 @@ public class UserInfoServiceImpl extends BaseService implements UserInfoService 
     SysResourcesDao sysResourcesDao;
     @Autowired
     MysqlDaoSupport mysqlDaoSupport;
+    @Autowired
+    BaseConfigDao   baseConfigDao;
 
     /** 
      * @param title
@@ -59,7 +65,7 @@ public class UserInfoServiceImpl extends BaseService implements UserInfoService 
      */
     @Override
     public Boolean addOrModUserInfo(Long uId, String title, String description, String loginName,
-                                    String loginPwd, Long[] roleId, Long groupId) {
+                                    String loginPwd, Long[] roleId, Long groupId, Long userType) {
         Calendar calendar = Calendar.getInstance();
         UserInfo userInfo = userInfoDao.getUserInfoByUID(uId);
         LogonInfo logonInfo = logonInfoDao.getLoginInfoByUID(uId);
@@ -69,7 +75,7 @@ public class UserInfoServiceImpl extends BaseService implements UserInfoService 
             userInfo.setTitle(title);
             userInfo.setDisableFlag(IGlobalConstant.ENABLED);
             userInfo.setGmtCreate(calendar.getTime());
-            userInfo.setUserType(UserInfo.USERTYPE_COMMON_USER);
+            userInfo.setUserType(userType);
             mysqlDaoSupport.save(userInfo);
             logonInfo = new LogonInfo();
             logonInfo.setuId(userInfo.getuId());
@@ -96,6 +102,7 @@ public class UserInfoServiceImpl extends BaseService implements UserInfoService 
             userInfo.setTitle(title);
             userInfo.setDisableFlag(IGlobalConstant.ENABLED);
             userInfo.setGmtMod(calendar.getTime());
+            userInfo.setUserType(userType);
             mysqlDaoSupport.update(userInfo);
             logonInfo.setLoginName(loginName);
             if (!StringUtils.isEmpty(loginPwd)) {
@@ -138,6 +145,39 @@ public class UserInfoServiceImpl extends BaseService implements UserInfoService 
         LogonInfo logonInfo = logonInfoDao.getLoginInfoByUID(uId);
         UserGroup userGroup = userGroupDao.getUserGroupByUid(uId);
         List<SysUsersRoles> sysRolesListDB = userInfoDao.getUserAndRoleRelationByUID(uId);
+
+        List<MonitorClientMapping> monitorsList = baseConfigDao.getMonitorsByuId(uId,
+            SysRoles.ROLE_NAME_MONITOR_DCLIENT);
+        List<MonitorClientMapping> clientList = baseConfigDao.getClientByuId(uId,
+            SysRoles.ROLE_NAME_INNER_CLIENT);
+
+        if (monitorsList.size() > 0) { //删除监控关系
+            for (MonitorClientMapping monitorClientMapping : monitorsList) {
+                mysqlDaoSupport.delete(monitorClientMapping);
+            }
+        }
+        if (clientList.size() > 0) { //删除监控关系
+            for (MonitorClientMapping monitorClientMapping : clientList) {
+                mysqlDaoSupport.delete(monitorClientMapping);
+            }
+        }
+        //删除组的自定义配置
+        List<GroupCustomRelational> listGroupCustomRelationalsLeft = userGroupDao
+            .getGroupCustomRelationalByLeftIdAndleftType(uId, GroupCustomRelational.LEFT_TYPE_UID);
+        //删除组的自定义配置
+        List<GroupCustomRelational> listGroupCustomRelationalsRight = userGroupDao
+            .getGroupCustomRelationalByRightIdAndRightType(uId,
+                GroupCustomRelational.RIGHT_TYPE_UID);
+        if (listGroupCustomRelationalsLeft.size() > 0) { //删除左边
+            for (GroupCustomRelational groupCustomRelational : listGroupCustomRelationalsLeft) {
+                mysqlDaoSupport.delete(groupCustomRelational);
+            }
+        }
+        if (listGroupCustomRelationalsRight.size() > 0) { //删除右边
+            for (GroupCustomRelational groupCustomRelational : listGroupCustomRelationalsRight) {
+                mysqlDaoSupport.delete(groupCustomRelational);
+            }
+        }
         if (userInfo != null) {
             userInfo.setDisableFlag(IGlobalConstant.DISABLED);
             userInfo.setGmtMod(calendar.getTime());

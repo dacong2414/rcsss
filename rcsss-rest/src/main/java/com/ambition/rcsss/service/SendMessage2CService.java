@@ -40,7 +40,7 @@ public interface SendMessage2CService {
      * @param jsonObject
      * @return
      */
-    ResultInfo<Map<String, Object>> login(ExecuteLDVo executeLDVo);
+    ResultInfo<Map<String, Object>> exeLogin(ExecuteLDVo executeLDVo);
 
     /**
      * 获取单个用户的信息
@@ -182,7 +182,7 @@ public interface SendMessage2CService {
      * @param executeVo
      * @return
      */
-    ResultInfo<Map<String, Object>> getMeetingInfos(ExecuteGDCVo executeVo);
+    ResultInfo<Map<String, Object>> getMeetingInfos();
 
     /**
      *存储c++端新增修改的 会议组
@@ -230,5 +230,11 @@ public interface SendMessage2CService {
      * @return
      */
     ResultInfo<Map<String, Object>> getUserInfoList();
+
+    /**
+     * 获取所有的监控关系
+     * @return
+     */
+    ResultInfo<Map<String, Object>> getMonitorRelationList();
 
 }

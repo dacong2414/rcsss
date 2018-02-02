@@ -52,12 +52,13 @@ public class UserInfoController {
             @ApiImplicitParam(name = "loginName", value = "登录名", required = true, paramType = "query", dataType = "string"),
             @ApiImplicitParam(name = "loginPwd", value = "密码", required = true, paramType = "query", dataType = "string"),
             @ApiImplicitParam(name = "roleId", value = "客户端类型", required = false, paramType = "query", dataType = "int[]"),
-            @ApiImplicitParam(name = "groupId", value = "用户分组名称", required = true, paramType = "query", dataType = "string") })
+            @ApiImplicitParam(name = "groupId", value = "用户分组名称", required = true, paramType = "query", dataType = "string"),
+            @ApiImplicitParam(name = "userType", value = "普通用户，还是管理员", required = true, paramType = "query", dataType = "int") })
     @NeedResubmitCheck
     @HttpSend2C
     public ResultInfo<String> addOrModUserInfo(Long uId, String title, String description,
                                                String loginName, String loginPwd, Long[] roleId,
-                                               Long groupId) {
+                                               Long groupId, Long userType) {
         log.debug(
             "==[/user/method=addOrModUserInfo]==>参数：uId={},title={},description={},loginName={},loginPwd={},roleId={},groupId={},fieldId={},",
             title, uId, description, loginName, loginPwd, roleId, groupId);
@@ -84,7 +85,7 @@ public class UserInfoController {
             throw new ProcessException(CodeEnum.ERROR_5043);
         }
         userInfoService.addOrModUserInfo(uId, title, description, loginName, loginPwd, roleId,
-            groupId);
+            groupId, userType);
         return ResultInfo.createSuccessResult("新增或者修改成功");
 
     }

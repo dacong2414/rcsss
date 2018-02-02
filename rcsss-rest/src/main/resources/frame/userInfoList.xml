@@ -43,6 +43,15 @@ SELECT
 			sur.user_id = ui.u_id
 		AND sur.role_id = sr.role_id
 	) AS role_name,
+(
+		SELECT
+			maln.mac_address
+		FROM
+			mac_address_login_name maln
+		WHERE
+		maln.login_name=li.login_name
+		
+	) AS mac_address,
 	ui.gmt_create
 FROM
 	user_info ui,
@@ -95,9 +104,17 @@ AND ui.user_type!=1
             <csId></csId>
         </fieldInfo>
         <fieldInfo>
+            <fieldName>mac_address</fieldName>
+            <showName>mac地址</showName>
+            <showIndex>25</showIndex>
+            <fieldType>String</fieldType>
+            <queryType>2</queryType>
+            <csId></csId>
+        </fieldInfo>
+        <fieldInfo>
             <fieldName>gmt_create</fieldName>
             <showName>创建时间</showName>
-            <showIndex>25</showIndex>
+            <showIndex>30</showIndex>
             <fieldType>Date</fieldType>
             <queryType>5</queryType>
             <csId></csId>

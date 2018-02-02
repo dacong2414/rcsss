@@ -151,6 +151,22 @@ public class UserGroupDaoImpl extends MysqlDaoSupport implements UserGroupDao {
     }
 
     /** 
+     * @param leftId
+     * @param leftType
+     * @return
+     * @see com.ambition.rcsss.dao.UserGroupDao#getGroupCustomRelationalByLeftIdAndleftType(java.lang.Long, java.lang.String)
+     */
+    @Override
+    public List<GroupCustomRelational> getGroupCustomRelationalByRightIdAndRightType(Long rightId,
+                                                                                     String rightType) {
+        String sql = "SELECT * FROM group_custom_relational WHERE right_id=:right_id AND right_type=:right_type";
+        String[] keys = { "right_id", "right_type" };
+        Object[] values = { rightId, rightType };
+        return sqlExecuteList(GroupCustomRelational.class, sql, IGlobalConstant.NO_PAGE_QUERY,
+            IGlobalConstant.NO_PAGE_QUERY, keys, values);
+    }
+
+    /** 
      * @param uId
      * @return
      * @see com.ambition.rcsss.dao.UserGroupDao#getGroupInfoByUId(java.lang.Long)

@@ -73,10 +73,10 @@ public class UserInfoServiceTest {
     public void testAddOrModUserInfo() throws Exception {
         Long[] roleIdAttr = { 1L };
         Boolean firstBoolean = userInfoService.addOrModUserInfo(0L, "admin11", "描述", "loginName",
-            "xxx", roleIdAttr, 1L);
+            "xxx", roleIdAttr, 1L, 0L);
         Assert.assertEquals(true, firstBoolean);
         Boolean secondBoolean = userInfoService.addOrModUserInfo(userInfo.getuId(), "admin22",
-            "描述修改", "loginName22", "xxx修改", roleIdAttr, 1L);
+            "描述修改", "loginName22", "xxx修改", roleIdAttr, 1L, 0L);
         Assert.assertEquals(true, secondBoolean);
     }
 

@@ -47,5 +47,6 @@ public interface ClientInfoDao {
      * @param macAddress
      * @return
      */
-    ClientInfo getClientInfoByMacAddressAndFieldId(String macAddress);
+    ClientInfo getClientInfoByMacAddress(String macAddress);
+
 }

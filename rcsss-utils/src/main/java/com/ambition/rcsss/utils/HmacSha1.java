@@ -27,12 +27,12 @@ public class HmacSha1 {
     private static final Logger logger = LoggerFactory.getLogger(HmacSha1.class);
     private static final String UTF_8  = "UTF-8";
 
-    public static String hamcsha1(byte[] data, byte[] key) {
+    public static byte[] hamcsha1(byte[] data, byte[] key) {
         try {
             SecretKeySpec signingKey = new SecretKeySpec(key, "HmacSHA1");
             Mac mac = Mac.getInstance("HmacSHA1");
             mac.init(signingKey);
-            return byte2hex(mac.doFinal(data));
+            return mac.doFinal(data);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -72,16 +72,15 @@ public class HmacSha1 {
     /**
      * 对给定的字符串进行base64加密操作
      */
-    public static String encodeData(String inputData) {
+    public static String encodeData(byte[] inputData) {
         try {
             if (null == inputData) {
                 return null;
             }
-            return new String(Base64.encodeBase64(inputData.getBytes(UTF_8)), UTF_8);
+            return new String(Base64.encodeBase64(inputData), UTF_8);
         } catch (UnsupportedEncodingException e) {
-            logger.error(inputData, e);
+            logger.error("base加密异常", e);
         }
-
         return null;
     }
 

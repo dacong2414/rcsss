@@ -21,10 +21,11 @@ public interface UserInfoService {
      * @param roleId
      * @param groupId 下级组id
      * @param fieldId
+     * @param userType
      * @return
      */
     public Boolean addOrModUserInfo(Long uId, String title, String description, String loginName,
-                                    String loginPwd, Long[] roleId, Long groupId);
+                                    String loginPwd, Long[] roleId, Long groupId, Long userType);
 
     /**
      * 删除用户

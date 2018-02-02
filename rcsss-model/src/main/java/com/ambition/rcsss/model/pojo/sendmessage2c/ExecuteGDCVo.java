@@ -10,5 +10,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class ExecuteGDCVo implements Serializable {
+    private String macAdress;
 
 }

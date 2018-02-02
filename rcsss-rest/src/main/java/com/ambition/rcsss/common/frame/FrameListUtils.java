@@ -5,6 +5,7 @@
 package com.ambition.rcsss.common.frame;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,12 +14,10 @@ import java.util.List;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ambition.rcsss.common.frame.SqlConstantInfo;
-import com.ambition.rcsss.common.frame.SqlFieldInfo;
-import com.ambition.rcsss.common.frame.SqlQueryInfo;
 import com.ambition.rcsss.utils.StringUtils;
 
 /**
@@ -125,6 +124,40 @@ public class FrameListUtils {
             LOG.error("获取sql常量表出错：" + StringUtils.outPutException(e));
         }
         return constantInfos;
+    }
+
+    public static void setFlag(String flag) {
+        ClassLoader classLoader = FrameListUtils.class.getClassLoader();
+        String url = classLoader.getResource("flag/flag.xml").getPath();
+        SAXBuilder builder = new SAXBuilder();
+        try {
+            Document doc = builder.build(new File(url));
+            Element element = doc.getRootElement();
+            if (element != null) {
+                element.setText(flag);
+            }
+            XMLOutputter output = new XMLOutputter();
+            output.output(doc, new FileOutputStream(url));
+        } catch (Exception e) {
+            LOG.error("设置分组可见配flag：" + StringUtils.outPutException(e));
+        }
+    }
+
+    public static String getFlag() {
+        ClassLoader classLoader = FrameListUtils.class.getClassLoader();
+        String url = classLoader.getResource("flag/flag.xml").getPath();
+        SAXBuilder builder = new SAXBuilder();
+        String flag = "";
+        try {
+            Document doc = builder.build(new File(url));
+            Element element = doc.getRootElement();
+            if (element != null) {
+                flag = element.getTextNormalize();
+            }
+        } catch (Exception e) {
+            LOG.error("获取分组可见配flag：" + StringUtils.outPutException(e));
+        }
+        return flag;
     }
 
     /**

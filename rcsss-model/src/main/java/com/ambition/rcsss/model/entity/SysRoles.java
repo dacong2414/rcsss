@@ -20,21 +20,21 @@ import com.google.common.collect.Range;
 @Entity
 @Table(name = "sys_roles", schema = "ambitionj2c", catalog = "")
 public class SysRoles {
-    private Long               roleId;                                      //角色id
-    private String             roleName;                                    //角色名称
-    private String             roleDesc;                                    //角色描述
-    private Long               useFlag;                                     //使用标志0.失效 1.有效
-    private Long               roleIssys;                                   //是否是管理员 0不是  1是
-    private Long               sysFlag;                                     //是否是系统默认角色(0是系统属性不可以更改 1.不是系统属性，可以更改)
+    private Long               roleId;                             //角色id
+    private String             roleName;                           //角色名称
+    private String             roleDesc;                           //角色描述
+    private Long               useFlag;                            //使用标志0.失效 1.有效
+    private Long               roleIssys;                          //是否是管理员 0不是  1是
+    private Long               sysFlag;                            //是否是系统默认角色(0是系统属性不可以更改 1.不是系统属性，可以更改)
 
     /**
      * 监控端
      */
-    public static final String ROLE_NAME_MONITOR_DCLIENT = "MonitorDclient";
+    public static final String ROLE_NAME_MONITOR_DCLIENT = "院内监控端";
     /**
      * hclient端
      */
-    public static final String ROLE_NAME_INNER_CLIENT    = "InnerClient";
+    public static final String ROLE_NAME_INNER_CLIENT    = "院内客户端";
     /**
      * 是系统属性，不可以更改
      */

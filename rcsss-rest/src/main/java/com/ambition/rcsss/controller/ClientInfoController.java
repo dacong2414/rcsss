@@ -128,4 +128,16 @@ public class ClientInfoController {
         ClientInfo clientInfoList = clientInfoService.getClientInfo(clientId);
         return ResultInfo.createSuccessResult(clientInfoList);
     }
+
+    @RequestMapping(value = "/method=getClientInfo2C", method = RequestMethod.POST)
+    @ApiOperation(value = "获取ClientInfo用于回显")
+    @ApiImplicitParams(value = { @ApiImplicitParam(name = "macAddress", value = "MAC地址", required = true, paramType = "query", dataType = "int") })
+    public ResultInfo<ClientInfo> getClientInfo2C(String macAddress) {
+        log.debug("==[/client/method=isExistMac]==>参数：macAddress={}", macAddress);
+        if (macAddress == null) {
+            throw new ProcessException(CodeEnum.ERROR_5057);
+        }
+        ClientInfo clientInfoList = clientInfoService.getClientInfo2C(macAddress);
+        return ResultInfo.createSuccessResult(clientInfoList);
+    }
 }

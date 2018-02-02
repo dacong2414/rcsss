@@ -38,4 +38,11 @@ public interface BaseConfigDao {
 
     MonitorClientMapping getMonitorClientMappingByClientUidAndMonitorUid(Long clientUid,
                                                                          Long monitorUid);
+
+    /**
+     * 获取所有的监控关系
+     *
+     * @return
+     */
+    List<MonitorClientMapping> getMonitorRelationList();
 }

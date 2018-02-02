@@ -82,6 +82,15 @@ public interface UserGroupDao {
                                                                             String leftType);
 
     /**
+     * 右边的配置
+     * @param leftId
+     * @param leftType
+     * @return
+     */
+    List<GroupCustomRelational> getGroupCustomRelationalByRightIdAndRightType(Long rightId,
+                                                                              String rightType);
+
+    /**
      *  通过uId获取用户所在的组
      * @param groupId
      * @return

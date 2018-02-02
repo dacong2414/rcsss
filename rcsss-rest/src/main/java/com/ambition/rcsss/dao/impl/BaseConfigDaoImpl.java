@@ -27,7 +27,7 @@ public class BaseConfigDaoImpl extends MysqlDaoSupport implements BaseConfigDao 
      */
     @Override
     public List<MonitorClientMapping> getClientByuId(Long uId, String roleNameInnerClient) {
-        String sql = "SELECT mcp.* FROM sys_roles sr, monitor_client_mapping mcp, sys_users_roles sur WHERE sr.role_name =:role_name AND sur.user_id = mcp.monitor_uid AND sur.role_id = sr.role_id AND sr.use_flag = 1 AND mcp.monitor_uid=:monitor_uid ";
+        String sql = "SELECT mcp.* FROM sys_roles sr, monitor_client_mapping mcp, sys_users_roles sur WHERE sr.role_name =:role_name AND sur.user_id = mcp.client_uid AND sur.role_id = sr.role_id AND sr.use_flag = 1 AND mcp.monitor_uid=:monitor_uid ";
         String[] keys = { "monitor_uid", "role_name" };
         Object[] values = { uId, roleNameInnerClient };
         return sqlExecuteList(MonitorClientMapping.class, sql, IGlobalConstant.NO_PAGE_QUERY,
@@ -57,7 +57,7 @@ public class BaseConfigDaoImpl extends MysqlDaoSupport implements BaseConfigDao 
      */
     @Override
     public List<Object[]> getCommonConfig() {
-        String sql = "SELECT cv.property_name_en,cv.property_value FROM config_view cv WHERE cv.global_flag=1 AND cv.disable_flag=1 ";
+        String sql = "SELECT cv.property_name_en,cv.property_value ,cv.client_id FROM config_view cv WHERE cv.global_flag=1 AND cv.disable_flag=1";
         String[] keys = {};
         Object[] values = {};
         return sqlExecuteList(null, sql, IGlobalConstant.NO_PAGE_QUERY,
@@ -76,6 +76,19 @@ public class BaseConfigDaoImpl extends MysqlDaoSupport implements BaseConfigDao 
         String[] keys = { "clientUid", "monitorUid" };
         Object[] values = { clientUid, monitorUid };
         return criteriaExecuteUniqueResult(MonitorClientMapping.class, keys, values);
+    }
+
+    /** 
+     * 获取所有的监控关系
+     * @return
+     * @see com.ambition.rcsss.dao.BaseConfigDao#getMonitorRelationList()
+     */
+    @Override
+    public List<MonitorClientMapping> getMonitorRelationList() {
+        String[] keys = {};
+        Object[] values = {};
+        return criteriaExecuteList(MonitorClientMapping.class, IGlobalConstant.NO_PAGE_QUERY,
+            IGlobalConstant.NO_PAGE_QUERY, keys, values, null, null);
     }
 
 }

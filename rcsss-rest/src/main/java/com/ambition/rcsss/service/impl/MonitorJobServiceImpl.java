@@ -39,7 +39,7 @@ public class MonitorJobServiceImpl extends BaseService implements MonitorJobServ
     private MonitorJobDao                          monitorJobDao;
     @Resource
     private RequestMappingHandlerMapping           requestMappingHandlerMapping;
-    private ConcurrentHashMap<String, ApiStatusVo> apiStatusMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, ApiStatusVo> apiStatusMap = new ConcurrentHashMap<String, ApiStatusVo>();
     private Map<String, String[]>                  apiTableMap  = new HashMap<>();
     private volatile boolean                       isFinish     = false;
 
@@ -96,7 +96,7 @@ public class MonitorJobServiceImpl extends BaseService implements MonitorJobServ
     @Override
     public List<ApiStatusVo> getApiStatus() {
         //遍历存到List返回
-        List<ApiStatusVo> list = new ArrayList<>();
+        List<ApiStatusVo> list = new ArrayList<>(apiStatusMap.size());
         for (ApiStatusVo apiStatusVo : apiStatusMap.values()) {
             list.add(apiStatusVo);
         }

@@ -1,5 +1,6 @@
 package com.ambition.rcsss.config.interceptor;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,15 +86,19 @@ public class CheckSignControlInterceptor {
             //签名算法 默认utf-8
             String hmacShaString = method + "\n" + contentType + "\n" + signDate + "\n" + msgIdent;
             //系统根据签名算法算出的密文与传入密文进行对比校验
-            String sysBySign = HmacSha1.encodeData(HmacSha1.hamcsha1(hmacShaString.getBytes(),
-                accessKeyInfo.getAccessKeySecret().getBytes()));
+            byte[] hmcsha1After = HmacSha1.hamcsha1(hmacShaString.getBytes(), accessKeyInfo
+                .getAccessKeySecret().getBytes());
+            String sysBySign = HmacSha1.encodeData(hmcsha1After);
             if (!sysBySign.equals(clientSign)) {
                 throw new ProcessException(CodeEnum.ERROR_30001);
             }
             LOG.error("客户端msgIdent=======" + msgIdent);
             Object[] arguments = joinPoint.getArgs();
-            String string = JSONObject.toJSONString(arguments[0]);
-            LOG.error("接收数据：======" + string);
+            if (arguments.length > 0) {
+                LOG.error("接收数据：======" + JSONObject.toJSONString(arguments[0]));
+            } else {
+                LOG.error("接收数据：====== 无body数据");
+            }
         }
     }
 
@@ -123,13 +128,16 @@ public class CheckSignControlInterceptor {
         return false;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
         Calendar calendar = Calendar.getInstance();
         //签名算法 默认utf-8
         String hmacShaString = "POST" + "\n" + "application/json" + "\n"
                                + calendar.getTimeInMillis() + "\n" + "1";
-
+        // String hmacShaString = "123456";
         //系统根据签名算法算出的密文与传入密文进行对比校验
+        // String hamcsha1After = HmacSha1.hamcsha1(hmacShaString.getBytes(),
+        //    "OtxrzxIsfpFjA7SwPzILwy8Bw21TLhquhboDYROV".getBytes());
+        // System.out.println("hamcsha1After" + hamcsha1After);
         String sysBySign = HmacSha1.encodeData(HmacSha1.hamcsha1(hmacShaString.getBytes(),
             "OtxrzxIsfpFjA7SwPzILwy8Bw21TLhquhboDYROV".getBytes()));
         System.out.println("加密后：====##" + "RCSSS 44CF9590006BF252F707:" + sysBySign);

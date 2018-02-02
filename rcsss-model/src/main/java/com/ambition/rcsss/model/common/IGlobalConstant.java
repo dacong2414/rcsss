@@ -89,7 +89,7 @@ public interface IGlobalConstant {
     /**
      * j2c接口的请求失效时间
      */
-    Long    SEND_MESSAGE_TIME_INTERVAL    = 60000000000000L;
+    Long    SEND_MESSAGE_TIME_INTERVAL    = 600000000 * 1000L;
     /**
      * controller日志（value=0）
      */

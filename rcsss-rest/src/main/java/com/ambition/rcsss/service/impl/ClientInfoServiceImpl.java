@@ -96,7 +96,7 @@ public class ClientInfoServiceImpl extends BaseService implements ClientInfoServ
      */
     @Override
     public Boolean isExistMacAddress(String macAddress, Long clientId) {
-        ClientInfo clientInfoDB = clientInfoDao.getClientInfoByMacAddressAndFieldId(macAddress);
+        ClientInfo clientInfoDB = clientInfoDao.getClientInfoByMacAddress(macAddress);
         if (clientInfoDB != null && !clientInfoDB.getClientId().equals(clientId)) {//不是自己，而且mac地址名重复
             return false;
         }
@@ -114,6 +114,22 @@ public class ClientInfoServiceImpl extends BaseService implements ClientInfoServ
         if (clientInfoDB != null) {
             List<ClientProperty> clientPropertiesListDB = clientInfoDao
                 .getAllClientPropertyByClinetId(clientId);
+            clientInfoDB.setListClientProperty(clientPropertiesListDB);
+        }
+        return clientInfoDB;
+    }
+
+    /** 
+     * @param macAddress
+     * @return
+     * @see com.ambition.rcsss.service.ClientInfoService#getClientInfo2C(java.lang.String)
+     */
+    @Override
+    public ClientInfo getClientInfo2C(String macAddress) {
+        ClientInfo clientInfoDB = clientInfoDao.getClientInfoByMacAddress(macAddress);
+        if (clientInfoDB != null) {
+            List<ClientProperty> clientPropertiesListDB = clientInfoDao
+                .getAllClientPropertyByClinetId(clientInfoDB.getClientId());
             clientInfoDB.setListClientProperty(clientPropertiesListDB);
         }
         return clientInfoDB;

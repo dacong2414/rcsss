@@ -9,8 +9,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -40,10 +42,12 @@ import com.ambition.rcsss.model.entity.ConsultDetail;
 import com.ambition.rcsss.model.entity.ConsultTotal;
 import com.ambition.rcsss.model.entity.DeleteBackUp;
 import com.ambition.rcsss.model.entity.DoctorInfo;
+import com.ambition.rcsss.model.entity.EquipmentInfo;
 import com.ambition.rcsss.model.entity.GroupInfo;
 import com.ambition.rcsss.model.entity.HttpSendFailedResend;
 import com.ambition.rcsss.model.entity.LogonInfo;
 import com.ambition.rcsss.model.entity.MacAddress;
+import com.ambition.rcsss.model.entity.MacAddressLoginName;
 import com.ambition.rcsss.model.entity.MeetingInfo;
 import com.ambition.rcsss.model.entity.MonitorClientMapping;
 import com.ambition.rcsss.model.entity.PatientInfo;
@@ -124,18 +128,54 @@ public class SendMessage2CServiceImpl extends BaseService implements SendMessage
      * @see com.ambition.rcsss.service.SendMessage2CService#executeLD(com.alibaba.fastjson.JSONObject)
      */
     @Override
-    public ResultInfo<Map<String, Object>> login(ExecuteLDVo executeLDVo) {
+    public ResultInfo<Map<String, Object>> exeLogin(ExecuteLDVo executeLDVo) {
         Map<String, Object> map = new HashMap<String, Object>();
         String loginName = executeLDVo.getLoginName();
         String loginPwd = executeLDVo.getPassword();
+        String equipmentId = executeLDVo.getEquipmentId();
         LogonInfo logonInfo = logonInfoDao.getLoginInfoByName(loginName);
         if (logonInfo == null) {
             throw new ProcessException(CodeEnum.ERROR_5047);
         } else if (logonInfo.getDisableFlag().equals(IGlobalConstant.ENABLED)) {
+            EquipmentInfo equipmentInfoDB = logonInfoDao.getEquipmentInfoByMacAdress(equipmentId);
+            MacAddressLoginName macAddressLoginNameDB = logonInfoDao
+                .getMacAddressLoginName(loginName);
+            if (equipmentInfoDB == null) { //存设备信息
+                equipmentInfoDB = new EquipmentInfo();
+                equipmentInfoDB.setEquipmentName(executeLDVo.getEquipmentName());
+                equipmentInfoDB.setEquipmentSysName(executeLDVo.getEquipmentSysName());
+                equipmentInfoDB.setEquipmentId(equipmentId);
+                equipmentInfoDB.setVersionInfo(executeLDVo.getVersionInfo());
+            } else {
+                equipmentInfoDB.setEquipmentName(executeLDVo.getEquipmentName());
+                equipmentInfoDB.setEquipmentSysName(executeLDVo.getEquipmentSysName());
+                equipmentInfoDB.setEquipmentId(executeLDVo.getEquipmentId());
+                equipmentInfoDB.setVersionInfo(executeLDVo.getVersionInfo());
+            }
+            mysqlDaoSupport.saveOrUpdate(equipmentInfoDB);
+            if (macAddressLoginNameDB == null) {
+                macAddressLoginNameDB = new MacAddressLoginName();
+                macAddressLoginNameDB.setMacAddress(equipmentId);
+                macAddressLoginNameDB.setLoginName(loginName);
+            } else {
+                macAddressLoginNameDB.setMacAddress(equipmentId);
+            }
+            mysqlDaoSupport.saveOrUpdate(macAddressLoginNameDB);
+            List<SysRoles> sysRoleList = sysRolesDao.getSysRoleByUid(logonInfo.getuId());
+            String roleNames = "";
+            for (SysRoles sysRole : sysRoleList) {
+                if (!"管理员".equals(sysRole.getRoleName())) {
+                    roleNames += sysRole.getRoleName() + ",";
+                }
+            }
+            if (roleNames.length() > 0) {
+                roleNames = roleNames.substring(0, roleNames.length() - 1);
+            }
             if (logonInfo.getLoginPwd().equals(DigestPass.getDigestPassWord(loginPwd))) {
                 //账号处于激活状态且密码正确
                 UserInfo userInfo = userInfoDao.getUserInfoByUID(logonInfo.getuId());
                 map.put("userInfo", userInfo);
+                map.put("roleNames", roleNames);//用户类型
                 List<SysResources> sysResourcesListDB = sysResourcesDao
                     .getUmstModuleResourceByUID(logonInfo.getuId());
                 map.put("loadmodule", sysResourcesListDB);
@@ -304,15 +344,21 @@ public class SendMessage2CServiceImpl extends BaseService implements SendMessage
     @Override
     public ResultInfo<Map<String, Object>> getBaseConfigAndCommonConfig(ExecuteGDCVo executeGDCVo) {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<Object[]> baseConfigAndCommonConfig = baseConfigDao.getCommonConfig();
-        if (baseConfigAndCommonConfig.size() == 0) {
+        List<Object[]> commonConfigDB = baseConfigDao.getCommonConfig();
+        Set<Map<String, String>> commonConfigSet = new HashSet<Map<String, String>>();
+        if (commonConfigDB.size() == 0) {
             throw new ProcessException(CodeEnum.ERROR_5051);
         } else {//获取所有公共服务器配置
-            Map<String, Object> mapConfig = new HashMap<String, Object>();
-            for (Object[] objects : baseConfigAndCommonConfig) {
-                mapConfig.put((String) objects[0], objects[1]);
+            for (Object[] obj : commonConfigDB) {//打包数据把 相同clientId的弄到一个map
+                Map<String, String> commonConfigMap = new HashMap<String, String>();
+                for (Object[] objIn : commonConfigDB) {
+                    if (obj[2] == objIn[2]) {
+                        commonConfigMap.put(objIn[0].toString(), objIn[1].toString());
+                    }
+                }
+                commonConfigSet.add(commonConfigMap);
             }
-            map.put("config", mapConfig);
+            map.put("config", commonConfigSet);
         }
         return ResultInfo.createSuccessResult(map);
     }
@@ -615,11 +661,11 @@ public class SendMessage2CServiceImpl extends BaseService implements SendMessage
      */
     @Override
     public ResultInfo<Map<String, Object>> getHClientConfigAndShowConfigAndCommonConfigByMAC(ExecuteMACGHCVo executeMACGHCVo) {
-        String macAdress = executeMACGHCVo.getMacAdress();
-        List<Object[]> hClientConfigDB = hClientConfigDao.getHClientConfigByMacAddress(macAdress
-            .toUpperCase().trim());
-        List<Object[]> commonConfig = baseConfigDao.getCommonConfig();
+        String macAdress = executeMACGHCVo.getMacAdress().toUpperCase().trim();
+        List<Object[]> hClientConfigDB = hClientConfigDao.getHClientConfigByMacAddress(macAdress);
+        List<Object[]> commonConfigDB = baseConfigDao.getCommonConfig();
         Map<String, Object> map = new HashMap<String, Object>();
+        Set<Map<String, String>> commonConfigSet = new HashSet<Map<String, String>>();
         if (hClientConfigDB == null) {
             throw new ProcessException(CodeEnum.ERROR_5052);
         } else {
@@ -629,8 +675,19 @@ public class SendMessage2CServiceImpl extends BaseService implements SendMessage
                     hClientConfigAndShowConfig.put(obj[0].toString(), obj[1].toString());
                 }
             }
+            if (commonConfigDB.size() > 0) {//数据打包 相同clientId的弄到一个map
+                for (Object[] obj : commonConfigDB) {
+                    Map<String, String> commonConfigMap = new HashMap<String, String>();
+                    for (Object[] objIn : commonConfigDB) {
+                        if (obj[2] == objIn[2]) {
+                            commonConfigMap.put(objIn[0].toString(), objIn[1].toString());
+                        }
+                    }
+                    commonConfigSet.add(commonConfigMap);
+                }
+            }
             map.put("hClientConfigAndShowConfig", hClientConfigAndShowConfig);
-            map.put("commonConfig", commonConfig);//包括了 基础配置 和公共配置
+            map.put("commonConfig", commonConfigSet);//包括了 基础配置 和公共配置
         }
         return ResultInfo.createSuccessResult(map);
     }
@@ -696,7 +753,7 @@ public class SendMessage2CServiceImpl extends BaseService implements SendMessage
      * @see com.ambition.rcsss.service.SendMessage2CService#executeMEETING(com.ambition.rcsss.model.pojo.sendmessage2c.ExecuteVo)
      */
     @Override
-    public ResultInfo<Map<String, Object>> getMeetingInfos(ExecuteGDCVo executeGDCVo) {
+    public ResultInfo<Map<String, Object>> getMeetingInfos() {
         Map<String, Object> map = new HashMap<String, Object>();
         List<MeetingInfo> listMeetingInfoDB = meetingInfoDao.getMeetingInfoAll();
         if (listMeetingInfoDB.size() > 0) {
@@ -847,6 +904,22 @@ public class SendMessage2CServiceImpl extends BaseService implements SendMessage
     @Override
     public void update(Object obj) {
         mysqlDaoSupport.update(obj);
+    }
+
+    /** 
+     * @return
+     * @see com.ambition.rcsss.service.SendMessage2CService#getAllMonitorsAndclients()
+     */
+    @Override
+    public ResultInfo<Map<String, Object>> getMonitorRelationList() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<MonitorClientMapping> listDB = baseConfigDao.getMonitorRelationList();
+        if (listDB.size() == 0) {
+            throw new ProcessException(CodeEnum.ERROR_5052);
+        }
+        map.put("monitorRelationList", listDB);
+
+        return ResultInfo.createSuccessResult(map);
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ambition.rcsss.common.NeedEhcache;
+import com.ambition.rcsss.common.frame.FrameListUtils;
 import com.ambition.rcsss.dao.MysqlDaoSupport;
 import com.ambition.rcsss.dao.UserGroupDao;
 import com.ambition.rcsss.model.common.CodeEnum;
@@ -107,7 +107,6 @@ public class GroupInfoServiceImpl extends BaseService implements GroupInfoServic
         } else {
             return false;
         }
-
     }
 
     /** 
@@ -232,12 +231,12 @@ public class GroupInfoServiceImpl extends BaseService implements GroupInfoServic
      * @see com.ambition.rcsss.service.GroupInfoService#getUids(java.lang.Long)
      */
     @Override
-    @NeedEhcache
+    // @NeedEhcache
     public ResultInfo<Map<String, Object>> getCustomRelationalUids(CustomRelationalVo customRelationalVo) {
         list.clear();//清空list  递归上级的容器
         seeSet.clear(); //清空  递归所有下级的集合   getChildUidsCustom
         Long uId = customRelationalVo.getUId();
-        String flag = customRelationalVo.getFlag();
+        String flag = FrameListUtils.getFlag();
         Set<Object> seeSet = new HashSet<Object>();//容器装可以看见的人
         Map<String, Object> map = new HashMap<String, Object>();//用于返回数据
         GroupInfo groupInfoDB = userGroupDao.getGroupInfoByUId(uId);//查出这个用户所在的组
@@ -388,6 +387,25 @@ public class GroupInfoServiceImpl extends BaseService implements GroupInfoServic
             getChildUidsCustom(groupInfo.getGroupId());
         }
         return seeSet;
+    }
+
+    /** 
+     * @param customRelationalVo
+     * @return
+     * @see com.ambition.rcsss.service.GroupInfoService#setFlag2Session(com.ambition.rcsss.model.pojo.sendmessage2c.CustomRelationalVo)
+     */
+    @Override
+    public void setFlag(String flag) {
+        FrameListUtils.setFlag(flag);
+    }
+
+    /** 
+     * @return
+     * @see com.ambition.rcsss.service.GroupInfoService#getFlag()
+     */
+    @Override
+    public String getFlag() {
+        return FrameListUtils.getFlag();
     }
 
 }
