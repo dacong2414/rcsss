@@ -51,9 +51,9 @@ public class HttpSend2CInterceptor {
     public void doAfter(JoinPoint joinPoint, Object rvt) {
         String data = JSONObject.toJSONString(rvt);
         try {
-            log.error("http主动发送给c++数据====>" + data);
-            JSONObject jsonObject = sendMessage2CService.httpRequest(url, method, data);
-            log.error("http主动发送给c++数据成功 ,c++返回数据====>" + jsonObject.toJSONString());
+            //log.error("http主动发送给c++数据====>" + data);
+            //JSONObject jsonObject = sendMessage2CService.httpRequest(url, method, data);
+           // log.error("http主动发送给c++数据成功 ,c++返回数据====>" + jsonObject.toJSONString());
         } catch (Exception e) {
             HttpSendFailedResend httpSendFailedResend = new HttpSendFailedResend();
             httpSendFailedResend.setData(data);

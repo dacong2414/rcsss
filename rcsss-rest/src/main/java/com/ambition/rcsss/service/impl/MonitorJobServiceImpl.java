@@ -45,7 +45,7 @@ public class MonitorJobServiceImpl extends BaseService implements MonitorJobServ
 
     @Override
     public void updateTableStats() {
-        List<RcsssTableStatsEntity> dbTableList = monitorJobDao
+       /* List<RcsssTableStatsEntity> dbTableList = monitorJobDao
             .findAll(RcsssTableStatsEntity.class);
         for (RcsssTableStatsEntity table : dbTableList) {
             RcsssTableStatsEntity nowTable = monitorJobDao.getTableStatsNow(table.getTableName());
@@ -70,18 +70,18 @@ public class MonitorJobServiceImpl extends BaseService implements MonitorJobServ
                 log.debug("接口监控任务，表{}数据发生新增或删除", table.getTableName());
             }
             monitorJobDao.update(table);
-        }
+        }*/
     }
 
     @Override
     public void addNewTable() {
-        log.debug("接口监控任务:开始扫描是否有新增含有gmt_mod列的表");
-        monitorJobDao.insertNewTable();
+        /*log.debug("接口监控任务:开始扫描是否有新增含有gmt_mod列的表");
+        monitorJobDao.insertNewTable();*/
     }
 
     @Override
     public void updateApiDb() {
-        List<RcsssTableStatsEntity> statsEntityList = monitorJobDao
+        /*List<RcsssTableStatsEntity> statsEntityList = monitorJobDao
             .findAll(RcsssTableStatsEntity.class);
         log.debug("接口状态计算任务:统计出表和更新次数结构集合");
         Map<String, Long> tableCounterMap = new HashMap<>(statsEntityList.size());
@@ -90,23 +90,25 @@ public class MonitorJobServiceImpl extends BaseService implements MonitorJobServ
         }
         //统计出spring中接口和表对应关系
         makeApiTableRelation();
-        apiCompute(tableCounterMap);
+        apiCompute(tableCounterMap);*/
     }
 
     @Override
     public List<ApiStatusVo> getApiStatus() {
-        //遍历存到List返回
+       /* //遍历存到List返回
         List<ApiStatusVo> list = new ArrayList<>(apiStatusMap.size());
         for (ApiStatusVo apiStatusVo : apiStatusMap.values()) {
             list.add(apiStatusVo);
         }
-        return list;
+        return list;*/
+        return  new ArrayList<>();
     }
 
     @Override
     public String getApiStatusByApi(String apiKey) {
-        ApiStatusVo apiStatusVo = apiStatusMap.get(apiKey);
-        return StringUtils.isNotEmpty(apiStatusVo.getStatus()) ? apiStatusVo.getStatus() : "";
+        /*ApiStatusVo apiStatusVo = apiStatusMap.get(apiKey);
+        return StringUtils.isNotEmpty(apiStatusVo.getStatus()) ? apiStatusVo.getStatus() : "";*/
+        return "";
     }
 
     @Override

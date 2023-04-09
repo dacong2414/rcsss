@@ -22,7 +22,7 @@ public class ApiMonitorJob {
     /**
      * 监控任务
      */
-    @Scheduled(fixedRate = 10 * 1000)
+   // @Scheduled(fixedRate = 10 * 1000)
     public void check() {
         long startTime = System.currentTimeMillis();
         log.debug("接口状态监控任务:开始……");
@@ -36,7 +36,7 @@ public class ApiMonitorJob {
     /**
      * 统计任务
      */
-    @Scheduled(initialDelay = 5000, fixedRate = 10 * 1000)
+  //  @Scheduled(initialDelay = 5000, fixedRate = 10 * 1000)
     public void compute() {
         long startTime = System.currentTimeMillis();
         log.debug("接口状态计算任务:开始……");

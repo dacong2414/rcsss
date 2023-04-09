@@ -104,7 +104,7 @@ public class MysqlDaoSupport implements CrudDao {
      * @return 持久实体, 获取 {@code null} 没有找到
      */
     public <T> T get(Class entityClass, Long id) {
-        return ObjectUtil.typeConversion(hibernateTemplate.get(entityClass, id));
+        return null;
     }
 
     /**

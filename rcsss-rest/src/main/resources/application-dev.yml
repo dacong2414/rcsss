@@ -15,11 +15,11 @@ common:
   mysql-password: cqabj208
 ##跨域制定域名IP和端口80可省略，配置
 csrf:
-  execludeUrls: 127.0.0.1,localhost,192.168.2.49,192.168.2.53,192.168.4.250
+  execludeUrls: 127.0.0.1,localhost,192.168.2.49,192.168.2.53,192.168.4.250,aichatgpt.shopping
 ##日志
-logging:
-  path: e:/j2cLog/rcsss
-  file: e:/j2cLog/rcsss.log
+#logging:
+  #path: d:/j2cLog/rcsss
+  #file: d:/j2cLog/rcsss.log
 ##Spring配置  
 spring:
   http: 
